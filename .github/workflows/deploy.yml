@@ -1,10 +1,9 @@
 name: Deploy to Cloudflare Pages
 on:
-  push:
-    branches:
-      - master
-
-jobs:
+ push:
+   branches:
+     - master
+jobs :
   build:
     runs-on: ubuntu-latest
     steps:
@@ -14,13 +13,14 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '9.0.x'  # Ensure this version exists
-
+         dotnet-version: '9.0.x'
+        
       - name: Publish Blazor WebAssembly
         run: dotnet publish -c Release -o publish
-
+        
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        run: wrangler pages deploy publish/wwwroot --project-name=samplesiteblazor
+          command: pages deploy publish/wwwroot --project-name=samplesiteblazor
